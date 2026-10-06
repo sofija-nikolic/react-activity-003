@@ -32,11 +32,11 @@
       }
 
       saveChanges(index, updatedMovie) {
-        // copy the current movies array so we don't mutate state directly
+        // make a copy of the movies array since we can't change state directly in React
         const movies = [...this.state.movies];
-        // replace the one movie that changed
+        // swap in the updated movie at its index
         movies[index] = updatedMovie;
-        // update state, which triggers a re-render
+        // save the new array to state, which re-renders the page
         this.setState({ movies: movies });
       }
 
@@ -70,12 +70,13 @@
       }
 
       handleChange(event) {
-        // build an updated copy of this movie with the changed field
+        // copy the current movie, then overwrite just the field that changed
+        // (event.target.name is "title", "tagline", or "runtime" depending on which input fired this)
         const updatedMovie = {
           ...this.props.movie,
           [event.target.name]: event.target.value
         };
-        // tell App about the change, including which index this movie is
+        // send the updated movie and its index back up to App
         this.props.saveChanges(this.props.index, updatedMovie);
       }
 

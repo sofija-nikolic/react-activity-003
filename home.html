@@ -32,7 +32,12 @@
       }
 
       saveChanges(index, updatedMovie) {
-        // placeholder for now, we'll implement this in the last step
+        // copy the current movies array so we don't mutate state directly
+        const movies = [...this.state.movies];
+        // replace the one movie that changed
+        movies[index] = updatedMovie;
+        // update state, which triggers a re-render
+        this.setState({ movies: movies });
       }
 
       render() {
@@ -59,8 +64,24 @@
     */
     class MovieForm extends React.Component {
 
+      constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+      }
+
+      handleChange(event) {
+        // build an updated copy of this movie with the changed field
+        const updatedMovie = {
+          ...this.props.movie,
+          [event.target.name]: event.target.value
+        };
+        // tell App about the change, including which index this movie is
+        this.props.saveChanges(this.props.index, updatedMovie);
+      }
 
       render() {
+        const movie = this.props.movie;
+
         return (
                 <form className="panel has-background-grey-lighter"  >
 
@@ -70,7 +91,7 @@
                     </div>
                     <div className="field-body">
                       <input className="input" type="text" name="title"
-                             value="sample title" />
+                             value={movie.title} onChange={this.handleChange} />
                     </div>
                   </div>
 
@@ -80,7 +101,7 @@
                     </div>
                     <div className="field-body">
                         <textarea className="textarea" rows="2"  name="tagline"
-                                  value="sample tagline"></textarea>
+                                  value={movie.tagline} onChange={this.handleChange}></textarea>
                     </div>
                   </div>
 
@@ -90,7 +111,7 @@
                     </div>
                     <div className="field-body">
                       <input className="input" type="text" name="runtime"
-                             value="sample runtime"/>
+                             value={movie.runtime} onChange={this.handleChange}/>
                     </div>
                   </div>
 
